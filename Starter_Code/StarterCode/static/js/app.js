@@ -21,27 +21,62 @@ function filteredList(test){
 }
 
 function chartInit(){
-    let dataList = sampleData.filter(filteredList);
+    let allData = sampleData.filter(filteredList)[0];
+    allData.sample_values.sort((a,b) => b-a);
+    let sample_values = allData.sample_values.slice(0,10).reverse();
+    let otu_numbers = allData.otu_ids.slice(0,10).reverse();
+    let otu_labels = allData.otu_labels.slice(0,10).reverse();
+    let otu_ids = []
+    for (let i=0;i<otu_numbers.length;i++){
+        otu_ids.push("OTU "+ otu_numbers[i])
+    }
+    console.log(sample_values);
     // Initialize bar chart
     let trace1 = {
-        values : dataList.sample_values,
-        labels : dataList.otu_ids,
-        hovertext : dataList.otu_labels,
+        x : sample_values,
+        y : otu_ids,
+        hovertext : otu_labels,
+        marker:
+        {
+            color: 'rgba(106,90,205,.7)',
+        },
         type: "bar",
-        orientation : "h"
+        orientation : "h",
     };
-    let traceData = [trace1];
-    let layout = {
+    let traceData1 = [trace1];
+    let layout1 = {
                 margin: {
                     l: 100,
                     r: 100,
                     t: 100,
                     b: 100
                 },
+                bargap: 0.05
             };
-    Plotly.newPlot("bar",traceData,layout);
+    console.log(traceData1);
+    Plotly.newPlot("bar",traceData1,layout1);
     // Initialize bubble chart
-    //////////////////////////ADD CODE HERE////////////////////////
+    let trace2 = {
+        x: allData.otu_ids,
+        y: allData.sample_values,
+        mode: 'markers',
+        marker: {
+            size: allData.sample_values,
+            color: allData.otu_ids
+        },
+        hovertext : allData.otu_labels
+    }
+    let traceData2 = [trace2]
+    let layout2 = {
+        // margin: {
+        //     l:100,
+        //     r: 100,
+        //     t: 100,
+        //     b: 100
+        // }
+    }
+    Plotly.newPlot("bubble",traceData2,layout2);
+    //////////////////////////////////////////////above doesn't work
 }
 
 
