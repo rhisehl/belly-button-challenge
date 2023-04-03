@@ -1,31 +1,68 @@
 // add API endpoint
 const url = "https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1.1/14-Interactive-Web-Visualizations/02-Homework/samples.json"
 
+// create functions to call inside the .then() function
 
-// import API data
-let data = d3.json(url).then(function(data){
-    // confirm data loaded successfully
-    console.log(data);
-    // separate out needed sample data
-    var sampleData = Object.values(data.samples);
-    // create testID list
-    var testIDs = sampleData.map(sampleData => sampleData.id);
-    // populate DOM list
+function createDropdown(){
+    // Create the dropdown menu options for the chart
     for (let i=0; i < testIDs.length; i++) {
         var x = document.getElementById("selDataset");
         var option = document.createElement("option");
         option.text = testIDs[i] ;
         x.add(option)};
-    // create initial chart (??outside the API call)
+}
 
-    // figure out how to make the variables live outside the API call
+function filteredList(test){
+    // Filter list based on desired ID
+        let dropdown = d3.select('#selDataset');
+        let dataset = parseInt(dropdown.property("value"));
+        console.log(dataset)
+        return parseInt(test.id) === dataset
+}
 
-    // create the functions for buildCharts and buildMetadata (rename?)
+function chartInit(){
+    let dataList = sampleData.filter(filteredList);
+    // Initialize bar chart
+    let trace1 = {
+        values : dataList.sample_values,
+        labels : dataList.otu_ids,
+        hovertext : dataList.otu_labels,
+        type: "bar",
+        orientation : "h"
+    };
+    let traceData = [trace1];
+    let layout = {
+                margin: {
+                    l: 100,
+                    r: 100,
+                    t: 100,
+                    b: 100
+                },
+            };
+    Plotly.newPlot("bar",traceData,layout);
+    // Initialize bubble chart
+    //////////////////////////ADD CODE HERE////////////////////////
+}
 
-    // function below was given by AskBCS as the ideal for the optionChanged. Must live outside API call or won't work.
 
-    }
+function buildCharts(sample){
+    // Build the Horizontal Bar Chart
+    let filteredData = sampleData.filter(filteredList);
+    let data = [{
+        values : filteredData.sample_values,
+        labels : filteredData.otu_ids,
+        hovertext : filteredData.otu_labels
+    }]
+    Plotly.restyle("bar",data);
+    // Build bubble chart
+    //////////////////////ADD CODE HERE////////////////////////
+}
 
+function buildMetadata(sample){
+    // Build the Metadata
+
+
+}
 
 function optionChanged(newSample) {
     // Fetch new data each time a new sample is selected
@@ -34,11 +71,32 @@ function optionChanged(newSample) {
 }
 
 
+// import API data
+let data = d3.json(url).then(function(data){
+    // confirm data loaded successfully
+    console.log(data);
+    // separate out needed sample data
+    sampleData = Object.values(data.samples);
+    // create testID list
+    testIDs = sampleData.map(sampleData => sampleData.id);
+    // populate DOM list
+    createDropdown()
+    // initialize chart
+    chartInit()
+    
+    })
+    
+
+    // create initial chart (??outside the API call)
+
+    // figure out how to make the variables live outside the API call
+
+    // create the functions for buildCharts and buildMetadata (rename?)
+
+    // function below was given by AskBCS as the ideal for the optionChanged. Must live outside API call or won't work.
 
 
 
-
-});
 
 //  
 //     // call optionChanged() when DOM changes
