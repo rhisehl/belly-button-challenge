@@ -45,13 +45,13 @@ function chartInit(){
     };
     let traceData1 = [trace1];
     let layout1 = {
-                margin: {
-                    l: 100,
-                    r: 100,
-                    t: 100,
-                    b: 100
-                },
-                bargap: 0.05
+                // margin: {
+                //     l: 500,
+                //     r: 100,
+                //     t: 500,
+                //     b: 100
+                // },
+                // bargap: 0.05
             };
     console.log(traceData1);
     Plotly.newPlot("bar",traceData1,layout1);
@@ -68,29 +68,37 @@ function chartInit(){
     }
     let traceData2 = [trace2]
     let layout2 = {
-        // margin: {
-        //     l:100,
-        //     r: 100,
-        //     t: 100,
-        //     b: 100
-        // }
+        margin: {
+            l:100,
+            r: 100,
+            t: 100,
+            b: 100
+        }
     }
     Plotly.newPlot("bubble",traceData2,layout2);
-    //////////////////////////////////////////////above doesn't work
 }
 
 
 function buildCharts(sample){
     // Build the Horizontal Bar Chart
-    let filteredData = sampleData.filter(filteredList);
-    let data = [{
-        values : filteredData.sample_values,
-        labels : filteredData.otu_ids,
-        hovertext : filteredData.otu_labels
-    }]
-    Plotly.restyle("bar",data);
+    let filteredData = sampleData.filter(filteredList)[0];
+    filteredData.sample_values.sort((a,b) => b-a);
+    let sample_values = filteredData.sample_values.slice(0,10).reverse();
+    let otu_numbers = filteredData.otu_ids.slice(0,10).reverse();
+    let otu_labels = filteredData.otu_labels.slice(0,10).reverse();
+    let otu_ids = []
+    for (let i=0;i<otu_numbers.length;i++){
+        otu_ids.push("OTU "+ otu_numbers[i])
+    }
+   let x = sample_values;
+   let y = otu_ids
+    Plotly.restyle("bar","x",[x]);
+    Plotly.restyle("bar","y",[y]);
     // Build bubble chart
-    //////////////////////ADD CODE HERE////////////////////////
+    let x2 = filteredData.otu_ids;
+    let y2 = filteredData.sample_values;
+    Plotly.restyle("bubble","x",[x2]);
+    Plotly.restyle("bubble","y",[y2]);
 }
 
 function buildMetadata(sample){
