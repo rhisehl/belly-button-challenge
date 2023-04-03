@@ -101,9 +101,31 @@ function buildCharts(sample){
     Plotly.restyle("bubble","y",[y2]);
 }
 
+function metadataInit(){
+    // Create default metadata table
+    let filteredMetadata = metaData.filter(filteredList)[0];
+    let panel = document.getElementById("sample-metadata");
+    panel.innerHTML = "ID: " + filteredMetadata.id + "<br />";
+    panel.innerHTML += "Ethnicity: " + filteredMetadata.ethnicity + "<br />";
+    panel.innerHTML += "Gender: " + filteredMetadata.gender + "<br />";
+    panel.innerHTML += "Age: " + filteredMetadata.age + "<br />";
+    panel.innerHTML += "Location" + filteredMetadata.location + "<br />";
+    panel.innerHTML += "bbType " + filteredMetadata.bbtype + "<br />";
+    panel.innerHTML += "Wfreq " + filteredMetadata.wfreq;
+
+}
+
 function buildMetadata(sample){
     // Build the Metadata
-
+    let filteredMetadata = metaData.filter(filteredList)[0];
+    let panel = document.getElementById("sample-metadata");
+    panel.innerHTML = "ID: " + filteredMetadata.id + "<br />";
+    panel.innerHTML += "Ethnicity: " + filteredMetadata.ethnicity + "<br />";
+    panel.innerHTML += "Gender: " + filteredMetadata.gender + "<br />";
+    panel.innerHTML += "Age: " + filteredMetadata.age + "<br />";
+    panel.innerHTML += "Location" + filteredMetadata.location + "<br />";
+    panel.innerHTML += "bbType " + filteredMetadata.bbtype + "<br />";
+    panel.innerHTML += "Wfreq " + filteredMetadata.wfreq;
 
 }
 
@@ -120,13 +142,16 @@ let data = d3.json(url).then(function(data){
     console.log(data);
     // separate out needed sample data
     sampleData = Object.values(data.samples);
+    // separate out metadata
+    metaData = Object.values(data.metadata);
     // create testID list
     testIDs = sampleData.map(sampleData => sampleData.id);
-    // populate DOM list
+    // populate dropdown menu options
     createDropdown()
-    // initialize chart
+    // initialize charts
     chartInit()
-    
+    // intialize demographics table
+    metadataInit()
     })
     
 
