@@ -38,3 +38,8 @@ buildMetaData() is almost identical to metaDataInit(). It clears the data in the
 
 ![image](https://user-images.githubusercontent.com/116215793/229924749-74096ed0-312a-4d69-a743-1b48892d172f.png)
 
+## Contributors
+AskBCS provided the optionChanged() code.
+Pseudocode framework provided by Bootcampspot
+API data provided by Bootcampspot
+
