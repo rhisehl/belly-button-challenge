@@ -16,7 +16,7 @@ function filteredList(test){
     // Filter list based on desired ID
         let dropdown = d3.select('#selDataset');
         let dataset = parseInt(dropdown.property("value"));
-        console.log(dataset)
+        // console.log(dataset)
         return parseInt(test.id) === dataset
 }
 
@@ -38,22 +38,16 @@ function chartInit(){
         hovertext : otu_labels,
         marker:
         {
-            color: 'rgba(106,90,205,.7)',
+            color: 'rgb(231,76,60)',
         },
         type: "bar",
         orientation : "h",
     };
     let traceData1 = [trace1];
     let layout1 = {
-                // margin: {
-                //     l: 500,
-                //     r: 100,
-                //     t: 500,
-                //     b: 100
-                // },
-                // bargap: 0.05
+        title: "Top OTUs in Individual #" + allData.id,
             };
-    console.log(traceData1);
+    // console.log(traceData1);
     Plotly.newPlot("bar",traceData1,layout1);
     // Initialize bubble chart
     let trace2 = {
@@ -68,6 +62,7 @@ function chartInit(){
     }
     let traceData2 = [trace2]
     let layout2 = {
+        title: "All OTUs in Individual #" + allData.id,
         margin: {
             l:100,
             r: 100,
@@ -76,6 +71,35 @@ function chartInit(){
         }
     }
     Plotly.newPlot("bubble",traceData2,layout2);
+    // Initialize Gauge Chart
+    let filteredMetadata = metaData.filter(filteredList)[0];
+    let userData = filteredMetadata.wfreq
+    let gaugeData = [{
+        value: userData,
+        title: {text: "<b>Belly Button Washing Frequency</b><br></br>Washes Per Week"},
+        type: "indicator",
+        mode: "gauge+number",
+        gauge: {
+            axis: { range: [null,9],dtick: "1"},
+            bar: {color: "maroon"},
+            steps: [
+                {range: [0,1],color : 'rgb(251,238,230)'},
+                {range: [1,2], color: 'rgb(246,221,204)'},
+                {range: [2,3], color: 'rgb(237,187,153)'},
+                {range: [3,4], color: 'rgb(229,152,102)'},
+                {range: [4,5], color: 'rgb(220,118,51)'},
+                {range: [5,6], color: 'rgb(211,84,0)'},
+                {range: [6,7], color: 'rgb(186,74,0)'},
+                {range: [7,8], color: 'rgb(160,64,0)'},
+                {range: [8,9], color: 'rgb(134,54,0)'}
+            ],
+            dtick: 1
+        }
+    }]
+    let gaugeLayout = {
+        automargin: true
+    }
+    Plotly.newPlot("gauge",gaugeData,gaugeLayout)
 }
 
 
@@ -90,15 +114,21 @@ function buildCharts(sample){
     for (let i=0;i<otu_numbers.length;i++){
         otu_ids.push("OTU "+ otu_numbers[i])
     }
-   let x = sample_values;
-   let y = otu_ids
+    let x = sample_values;
+    let y = otu_ids
     Plotly.restyle("bar","x",[x]);
     Plotly.restyle("bar","y",[y]);
+    Plotly.relayout("bar",{'title':"Top OTUs in Individual #" + sample});
     // Build bubble chart
     let x2 = filteredData.otu_ids;
     let y2 = filteredData.sample_values;
     Plotly.restyle("bubble","x",[x2]);
     Plotly.restyle("bubble","y",[y2]);
+    Plotly.relayout("bubble",{title: "All OTUs in Individual #" + sample})
+    // Build gauge chart
+    let filteredMetadata = metaData.filter(filteredList)[0];
+    let userData = filteredMetadata.wfreq;
+    Plotly.restyle("gauge","value",[userData])
 }
 
 function metadataInit(){
@@ -139,7 +169,7 @@ function optionChanged(newSample) {
 // import API data
 let data = d3.json(url).then(function(data){
     // confirm data loaded successfully
-    console.log(data);
+    // console.log(data);
     // separate out needed sample data
     sampleData = Object.values(data.samples);
     // separate out metadata
@@ -152,51 +182,5 @@ let data = d3.json(url).then(function(data){
     chartInit()
     // intialize demographics table
     metadataInit()
-    })
+})
     
-
-    // create initial chart (??outside the API call)
-
-    // figure out how to make the variables live outside the API call
-
-    // create the functions for buildCharts and buildMetadata (rename?)
-
-    // function below was given by AskBCS as the ideal for the optionChanged. Must live outside API call or won't work.
-
-
-
-
-//  
-//     // call optionChanged() when DOM changes
-// d3.selectAll("#selDataset").on("change",optionChanged);
-// function optionChanged(){
-//     // Assign dropdown menu option to letiable
-//     var dropdownMenu = d3.select('#selDataset');
-//     var dataset = parseInt(dropdownMenu.property("value"));
-//     function selectID(person){return person.id = dataset};
-//     let rawData = Object.values(data.samples);
-//     console.log(rawData)
-//     var currentSample = rawData.filter(selectID);
-//     // create variables for the data of interest
-//     currentSample = currentSample.sort((a,b) => b.sample_values - a.sample_values);
-//     currentSample = currentSample.slice(0,10);
-//     currentSample = currentSample.reverse();
-
-//     let trace1 = {
-//         y: currentSample.map(currentSample => currentSample.sample_values),
-//         x: currentSample.map(currentSample => currentSample.otu_ids),
-//         text: currentSample.map(currentSample => currentSample.otu_labels),
-//         type: "bar",
-//         orientation: "h"
-//     };
-//     let traceData = [trace1]
-//     let layout = {
-//         title: "Top 10 OTUs for Individual ${dataset}",
-//         margin: {
-//             l: 100,
-//             r: 100,
-//             t: 100,
-//             b: 100
-//         }
-//     };
-//     Plotly.newPlot("plot",traceData,layout)}});
