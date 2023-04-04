@@ -40,6 +40,10 @@ buildMetaData() is almost identical to metaDataInit(). It clears the data in the
 
 ## Contributors
 AskBCS provided the optionChanged() code.
+
 Pseudocode framework provided by Bootcampspot
+
 API data provided by Bootcampspot
+
+Data reference: Hulcr, J. et al. (2012) A Jungle in There: Bacteria in Belly Buttons are Highly Diverse, but Predictable. Retrieved from: http://robdunnlab.com/projects/belly-button-biodiversity/results-and-data/Links to an external site.
 
